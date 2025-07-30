@@ -1,46 +1,55 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Param, ParseIntPipe } from "@nestjs/common";
-import { Postagem } from "../entities/postagem.entity";
-import { PostagemService } from "../services/postagem.service";
+import { Tema } from "../entities/tema.entity";
+import { TemaService } from "./../services/tema.service";
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  ParseIntPipe,
+  Post,
+  Put,
+} from "@nestjs/common";
 
-@Controller("/postagens")
-export class PostagemController {
-  constructor(private readonly postagemService: PostagemService) {}
+@Controller("/temas")
+export class TemaController {
+  constructor(private readonly temaService: TemaService) {}
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  findAll(): Promise<Postagem[]> {
-    return this.postagemService.findAll();
-  }
-  
-  @Get('/:id')
-  @HttpCode(HttpStatus.OK)
-  findById(@Param('id', ParseIntPipe) id: number): Promise<Postagem> {
-    return this.postagemService.findById(id);
+  findAll(): Promise<Tema[]> {
+    return this.temaService.findAll();
   }
 
-  
-  @Get('/titulo/:titulo')
+  @Get("/:id")
   @HttpCode(HttpStatus.OK)
-  findAllByTitulo(@Param('titulo') id: string): Promise<Postagem[]> {
-    return this.postagemService.findAllByTitulo(titulo);
+  findById(@Param("id", ParseIntPipe) id: number): Promise<Tema> {
+    return this.temaService.findById(id);
+  }
+
+  @Get("/descricao/:descricao")
+  @HttpCode(HttpStatus.OK)
+  findAllByDescricao(@Param("descricao") descricao: string): Promise<Tema[]> {
+    return this.temaService.findAllByDescricao(descricao);
   }
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  create(@Body() postagem: Postagem) : Promise<Postagem> {
-    return this.postagemService.create(postagem);
+  create(@Body() tema: Tema): Promise<Tema> {
+    return this.temaService.create(tema);
   }
 
-  
   @Put()
-  @HttpCode(HttpStatus.CREATED)
-  update(@Body() postagem: Postagem) : Promise<Postagem> {
-    return this.postagemService.update(postagem);
+  @HttpCode(HttpStatus.OK)
+  update(@Body() tema: Tema): Promise<Tema> {
+    return this.temaService.update(tema);
   }
 
-  @Delete(':id')
+  @Delete("/:id")
   @HttpCode(HttpStatus.NO_CONTENT)
-  delete(@Param('id', ParseIntPipe) id: number): Promise<void> {
-    return this.postagemService.delete(id);
+  delete(@Param("id", ParseIntPipe) id: number) {
+    return this.temaService.delete(id);
   }
 }
