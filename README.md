@@ -36,8 +36,11 @@ Durante o desenvolvimento deste projeto, foram trabalhados os seguintes pontos:
 - Tratamento de exceções (`HttpException`)
 
 ### 🔹 Segurança:
-- Criptografia de senha com `bcrypt`
-- Estrutura inicial para autenticação (AuthModule pronto)
+- Criptografia de senha com **bcrypt**
+- **Autenticação JWT** implementada (AuthModule completo)
+- Proteção de rotas com **Guards** (`JwtAuthGuard`)
+- Senhas nunca são armazenadas em texto puro no banco
+- Suporte a criação e validação de token de acesso para áreas protegidas
 
 ---
 
