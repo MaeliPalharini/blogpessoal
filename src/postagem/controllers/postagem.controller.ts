@@ -1,5 +1,6 @@
-import { Tema } from "../entities/tema.entity";
-import { TemaService } from "./../services/tema.service";
+import { Postagem } from '../entities/postagem.entity';
+import { PostagemService } from '../services/postagem.service';
+import { JwtAuthGuard } from '../../auth/guard/jwt-auth.guard';
 import {
   Body,
   Controller,
@@ -11,46 +12,47 @@ import {
   ParseIntPipe,
   Post,
   Put,
-} from "@nestjs/common";
+  UseGuards,
+} from '@nestjs/common';
 
-@Controller("/temas")
-export class TemaController {
-  constructor(private readonly temaService: TemaService) {}
+@UseGuards(JwtAuthGuard)
+@Controller('/postagens')
+export class PostagemController {
+  constructor(private readonly postagemService: PostagemService) {}
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  findAll(): Promise<Tema[]> {
-    return this.temaService.findAll();
+  findAll(): Promise<Postagem[]> {
+    return this.postagemService.findAll();
   }
 
-  @Get("/:id")
+  @Get('/:id')
   @HttpCode(HttpStatus.OK)
-  findById(@Param("id", ParseIntPipe) id: number): Promise<Tema> {
-    return this.temaService.findById(id);
+  findById(@Param('id', ParseIntPipe) id: number): Promise<Postagem> {
+    return this.postagemService.findById(id);
   }
 
-  @Get("/descricao/:descricao")
+  @Get('/titulo/:titulo')
   @HttpCode(HttpStatus.OK)
-  findAllByDescricao(@Param("descricao") descricao: string): Promise<Tema[]> {
-    return this.temaService.findAllByDescricao(descricao);
+  findAllByTitulo(@Param('titulo') titulo: string): Promise<Postagem[]> {
+    return this.postagemService.findAllByTitulo(titulo);
   }
-
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  create(@Body() tema: Tema): Promise<Tema> {
-    return this.temaService.create(tema);
+  create(@Body() postagem: Postagem): Promise<Postagem> {
+    return this.postagemService.create(postagem);
   }
 
   @Put()
   @HttpCode(HttpStatus.OK)
-  update(@Body() tema: Tema): Promise<Tema> {
-    return this.temaService.update(tema);
+  update(@Body() postagem: Postagem): Promise<Postagem> {
+    return this.postagemService.update(postagem);
   }
 
-  @Delete("/:id")
+  @Delete('/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  delete(@Param("id", ParseIntPipe) id: number) {
-    return this.temaService.delete(id);
+  delete(@Param('id', ParseIntPipe) id: number) {
+    return this.postagemService.delete(id);
   }
 }

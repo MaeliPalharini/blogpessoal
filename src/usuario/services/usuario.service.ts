@@ -56,7 +56,10 @@ export class UsuarioService {
 
   async update(usuario: Usuario): Promise<Usuario> {
     if (!usuario.id) {
-      throw new HttpException('Id do usuário não informado!', HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        'Id do usuário não informado!',
+        HttpStatus.BAD_REQUEST,
+      );
     }
 
     const usuarioExistente = await this.findById(usuario.id);
@@ -64,7 +67,10 @@ export class UsuarioService {
     const outroUsuario = await this.findByUsuario(usuario.usuario);
 
     if (outroUsuario && outroUsuario.id !== usuario.id) {
-      throw new HttpException('Usuário (e-mail) já cadastrado!', HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        'Usuário (e-mail) já cadastrado!',
+        HttpStatus.BAD_REQUEST,
+      );
     }
 
     usuario.senha = await this.bcrypt.criptografarSenha(usuario.senha);
@@ -74,7 +80,10 @@ export class UsuarioService {
   async delete(id: number): Promise<void> {
     const usuario = await this.findById(id);
     if (!usuario) {
-      throw new HttpException('Usuário não encontrado para exclusão.', HttpStatus.NOT_FOUND);
+      throw new HttpException(
+        'Usuário não encontrado para exclusão.',
+        HttpStatus.NOT_FOUND,
+      );
     }
 
     await this.usuarioRepository.delete(id);
