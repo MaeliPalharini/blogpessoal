@@ -61,9 +61,7 @@ export class UsuarioService {
         HttpStatus.BAD_REQUEST,
       );
     }
-
-    const usuarioExistente = await this.findById(usuario.id);
-
+    await this.findById(usuario.id);
     const outroUsuario = await this.findByUsuario(usuario.usuario);
 
     if (outroUsuario && outroUsuario.id !== usuario.id) {

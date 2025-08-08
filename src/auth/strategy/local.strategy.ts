@@ -23,5 +23,3 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
     return validaUsuario;
   }
 }
-
-export class JwtStrategy {}
