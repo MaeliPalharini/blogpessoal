@@ -70,34 +70,6 @@ Durante o desenvolvimento deste projeto, foram trabalhados os seguintes pontos:
     └── main.ts
 ```
 
-## Endpoints disponíveis
-
-### 📁 /usuarios
-POST   /usuarios/cadastrar     → cria um novo usuário  
-GET    /usuarios/all           → lista todos os usuários  
-GET    /usuarios/:id           → busca por ID  
-GET    /usuarios/nome/:nome    → busca por nome  
-PUT    /usuarios/atualizar     → atualiza um usuário  
-DELETE /usuarios/deletar/:id   → deleta um usuário  
-
-
-### 📁 /temas
-POST   /temas                  → cria um novo tema  
-GET    /temas                  → lista todos os temas  
-GET    /temas/:id              → busca por ID  
-GET    /temas/descricao/:desc → busca por descrição  
-PUT    /temas                  → atualiza um tema  
-DELETE /temas/:id             → deleta um tema  
-
-
-### 📁 /postagens
-POST   /postagens               → cria uma nova postagem  
-GET    /postagens               → lista todas as postagens  
-GET    /postagens/:id           → busca por ID  
-GET    /postagens/titulo/:titulo → busca por título  
-PUT    /postagens               → atualiza uma postagem  
-DELETE /postagens/:id           → deleta uma postagem  
-
 
 ## 🧪 Como testar a API
 ```
@@ -111,6 +83,15 @@ npm run start:dev
 ```
 ```
 Use o Insomnia ou Postman para fazer requisições.
+```
+
+
+## 🧪 Testes Automatizados
+Este projeto possui testes e2e (end-to-end) utilizando Jest e Supertest, cobrindo o fluxo principal de Usuário e Autenticação.
+
+Como rodar os testes
+```bash
+    npm run test:e2e
 ```
 
 ## 💡 Dica
