@@ -33,22 +33,30 @@ export class AuthService {
   }
 
   async login(usuarioLogin: UsuarioLogin) {
-    const payload = { sub: usuarioLogin.usuario };
+    const buscaUsuario = await this.usuarioService.findByUsuario(usuarioLogin.usuario);
 
-    const buscaUsuario = await this.usuarioService.findByUsuario(
-      usuarioLogin.usuario,
+    if (!buscaUsuario) {
+      throw new HttpException('Usuário não encontrado!', HttpStatus.NOT_FOUND);
+    }
+
+    const senhaOk = await this.bcrypt.compararSenhas(
+      usuarioLogin.senha,
+      buscaUsuario.senha,
     );
 
-    if (!buscaUsuario)
-      throw new HttpException('Usuário não encontrado!', HttpStatus.NOT_FOUND);
+    if (!senhaOk) {
+      throw new HttpException('Senha inválida!', HttpStatus.UNAUTHORIZED);
+    }
+
+    const payload = { sub: buscaUsuario.id, username: buscaUsuario.usuario };
+    const token = this.jwtService.sign(payload);
 
     return {
       id: buscaUsuario.id,
       nome: buscaUsuario.nome,
-      usuario: usuarioLogin.usuario,
-      senha: '',
+      usuario: buscaUsuario.usuario,
       foto: buscaUsuario.foto,
-      token: `Bearer ${this.jwtService.sign(payload)}`,
+      token,
     };
   }
 }

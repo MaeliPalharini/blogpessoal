@@ -1,13 +1,17 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import * as request from 'supertest';
-import { AppModule } from '../src/app.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { AuthModule } from '../src/auth/auth.module';
+import { UsuarioModule } from '../src/usuario/usuario.module';
+import { Postagem } from '../src/postagem/entities/postagem.entity';
+import { Tema } from '../src/tema/entities/tema.entity';
+import { Usuario } from '../src/usuario/entities/usuario.entity';
 
 describe('Testes dos Módulos Usuario e Auth (e2e)', () => {
-  let token: any;
-  let usuarioId: any;
   let app: INestApplication;
+  let token: string;
+  let usuarioId: number;
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -15,11 +19,13 @@ describe('Testes dos Módulos Usuario e Auth (e2e)', () => {
         TypeOrmModule.forRoot({
           type: 'sqlite',
           database: ':memory:',
-          entities: [__dirname + './../src/**/entities/*.entity.ts'],
+          entities: [Postagem, Tema, Usuario],
           synchronize: true,
           dropSchema: true,
+          logging: false,
         }),
-        AppModule,
+        AuthModule,
+        UsuarioModule,
       ],
     }).compile();
 
@@ -32,8 +38,8 @@ describe('Testes dos Módulos Usuario e Auth (e2e)', () => {
     await app.close();
   });
 
-  it('01 - Deve Cadastrar um novo Usuário', async () => {
-    const resposta = await request(app.getHttpServer())
+  it('01a - Deve Cadastrar um novo Usuário', async () => {
+    const res = await request(app.getHttpServer())
       .post('/usuarios')
       .send({
         nome: 'Root',
@@ -43,13 +49,12 @@ describe('Testes dos Módulos Usuario e Auth (e2e)', () => {
       })
       .expect(201);
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-member-access
-    usuarioId = resposta.body.id;
+    usuarioId = res.body.id as number;
   });
-  //
+
   it('02 - Não Deve Cadastrar um Usuário Duplicado', async () => {
     await request(app.getHttpServer())
-      .post('/usuarios/cadastrar')
+      .post('/usuarios')
       .send({
         nome: 'Root',
         usuario: 'root@root.com',
@@ -60,41 +65,37 @@ describe('Testes dos Módulos Usuario e Auth (e2e)', () => {
   });
 
   it('03 - Deve Autenticar o Usuário (Login)', async () => {
-    const resposta = await request(app.getHttpServer())
-      .post('/usuarios/logar')
+    const res = await request(app.getHttpServer())
+      .post('/auth/logar')
       .send({
         usuario: 'root@root.com',
         senha: 'rootroot',
       })
       .expect(200);
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-member-access
-    token = resposta.body.token;
+    token = res.body.token as string;
   });
 
   it('04 - Deve Listar todos os Usuários', async () => {
-    return request(app.getHttpServer())
+    await request(app.getHttpServer())
       .get('/usuarios/all')
-      .set('Authorization', `${token}`)
-      .send({})
+      .set('Authorization', `Bearer ${token}`)
       .expect(200);
   });
 
   it('05 - Deve Atualizar um Usuário', async () => {
-    return request(app.getHttpServer())
-      .put('/usuarios/atualizar')
-      .set('Authorization', `${token}`)
+    const res = await request(app.getHttpServer())
+      .put('/usuarios')
+      .set('Authorization', `Bearer ${token}`)
       .send({
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         id: usuarioId,
         nome: 'Root Atualizado',
         usuario: 'root@root.com',
         senha: 'rootroot',
         foto: '-',
       })
-      .expect(200)
-      .then((resposta) => {
-        expect('Root Atualizado').toEqual(resposta.body.nome);
-      });
+      .expect(200);
+
+    expect(res.body.nome).toBe('Root Atualizado');
   });
 });
