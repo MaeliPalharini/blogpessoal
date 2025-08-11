@@ -12,5 +12,5 @@ export class Tema {
   descricao: string;
 
   @OneToMany(() => Postagem, (postagem) => postagem.tema)
-  postagem: Postagem[];
+  postagens: Postagem[];
 }

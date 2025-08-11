@@ -2,34 +2,37 @@ import { IsNotEmpty } from 'class-validator';
 import {
   Column,
   Entity,
+  JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
-  UpdateDateColumn,
 } from 'typeorm';
+
 import { Tema } from '../../tema/entities/tema.entity';
 import { Usuario } from '../../usuario/entities/usuario.entity';
 
-@Entity({ name: 'tb_postagens' })
+@Entity('tb_postagens')
 export class Postagem {
   @PrimaryGeneratedColumn()
   id: number;
 
   @IsNotEmpty()
-  @Column({ length: 100, nullable: false })
+  @Column()
   titulo: string;
 
   @IsNotEmpty()
-  @Column({ length: 1000, nullable: false })
+  @Column({ type: 'text' })
   texto: string;
 
-  @UpdateDateColumn()
+  @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
   data: Date;
 
-  @ManyToOne(() => Tema, (tema) => tema.postagem, {
+  @ManyToOne(() => Usuario, (usuario) => usuario.postagens, {
     onDelete: 'CASCADE',
   })
-  tema: Tema;
-
-  @ManyToOne(() => Usuario, (usuario) => usuario.postagem, { eager: true })
+  @JoinColumn({ name: 'usuario_id' })
   usuario: Usuario;
+
+  @ManyToOne(() => Tema, (tema) => tema.postagens, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'tema_id' })
+  tema: Tema;
 }

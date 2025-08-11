@@ -49,22 +49,27 @@ export class PostagemService {
   }
 
   async create(postagem: Postagem): Promise<Postagem> {
-    await this.temaService.findById(postagem.tema.id);
-    return await this.postagemRepository.save(postagem);
-  }
-
-  async update(postagem: Postagem): Promise<Postagem> {
-    const postagem_id = await this.findById(postagem.id);
-    if (!postagem_id) {
-      throw new HttpException('Postagem não encontrada', HttpStatus.NOT_FOUND);
+    if (!postagem.tema || !postagem.tema.id) {
+      throw new HttpException('Tema é obrigatório', HttpStatus.BAD_REQUEST);
     }
 
     await this.temaService.findById(postagem.tema.id);
-    return await this.postagemRepository.save(postagem);
+    return this.postagemRepository.save(postagem);
+  }
+
+  async update(postagem: Postagem): Promise<Postagem> {
+    await this.findById(postagem.id);
+
+    if (!postagem.tema || !postagem.tema.id) {
+      throw new HttpException('Tema é obrigatório', HttpStatus.BAD_REQUEST);
+    }
+
+    await this.temaService.findById(postagem.tema.id);
+    return this.postagemRepository.save(postagem);
   }
 
   async delete(id: number): Promise<DeleteResult> {
     await this.findById(id);
-    return await this.postagemRepository.delete(id);
+    return this.postagemRepository.delete(id);
   }
 }
