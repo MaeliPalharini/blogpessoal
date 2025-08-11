@@ -6,6 +6,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  // Swagger
   const config = new DocumentBuilder()
     .setTitle('Blog Pessoal')
     .setDescription('Projeto Blog Pessoal')
@@ -18,14 +19,19 @@ async function bootstrap() {
     .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('/swagger', app, document);
+  SwaggerModule.setup('swagger', app, document);
 
-  process.env.TZ = '-03:00';
+  app.enableCors({ origin: true, credentials: true });
 
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
+    }),
+  );
 
-  app.enableCors;
-
-  await app.listen(process.env.PORT ?? 4000);
+  const port = Number(process.env.PORT) || 4000;
+  await app.listen(port, '0.0.0.0');
 }
 bootstrap();
