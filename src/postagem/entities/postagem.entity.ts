@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty } from 'class-validator';
 import {
-  Column,
+  CreateDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
@@ -19,22 +19,18 @@ export class Postagem {
 
   @ApiProperty()
   @IsNotEmpty()
-  @Column()
   titulo: string;
 
   @ApiProperty()
   @IsNotEmpty()
-  @Column({ type: 'text' })
   texto: string;
 
-  @ApiProperty()
-  @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
+  @ApiProperty({ type: String, format: 'date-time' })
+  @CreateDateColumn({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP' })
   data: Date;
 
   @ApiProperty({ type: () => Usuario })
-  @ManyToOne(() => Usuario, (usuario) => usuario.postagens, {
-    onDelete: 'CASCADE',
-  })
+  @ManyToOne(() => Usuario, (usuario) => usuario.postagens, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'usuario_id' })
   usuario: Usuario;
 
