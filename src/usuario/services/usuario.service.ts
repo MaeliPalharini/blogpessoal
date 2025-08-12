@@ -20,13 +20,13 @@ export class UsuarioService {
 
   async findAll(): Promise<Usuario[]> {
     return this.usuarioRepository.find({
-      relations: { postagens: true },
+      // relations: { postagens: true },
       select: {
         id: true,
         nome: true,
         usuario: true,
         foto: true,
-        postagens: { id: true, titulo: true, texto: true, data: true },
+        // postagens: true ,
       },
     });
   }

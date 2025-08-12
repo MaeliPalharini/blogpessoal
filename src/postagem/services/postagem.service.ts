@@ -17,6 +17,16 @@ export class PostagemService {
       relations: {
         tema: true,
       },
+      select:{
+        id: true,
+        titulo: true,
+        texto: true,
+        data: true,
+        tema: {
+          id: true,
+          descricao: true,
+        },
+      }
     });
   }
 

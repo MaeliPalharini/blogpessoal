@@ -22,18 +22,11 @@ async function bootstrap() {
   SwaggerModule.setup('/swagger', app, document);
 
   app.useGlobalPipes(new ValidationPipe({
-    whitelist: true,
-    forbidNonWhitelisted: true,
-    transform: true,
+
   }));
 
   app.enableCors({
-    origin: [
-      'http://localhost:4000',
-      'https://blogpessoal-rc1l.onrender.com'
-    ],
-    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-    credentials: true,
+
   });
 
   const port = Number(process.env.PORT) || 4000;

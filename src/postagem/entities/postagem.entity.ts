@@ -6,6 +6,7 @@ import {
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
+  Column,
 } from 'typeorm';
 
 import { Tema } from '../../tema/entities/tema.entity';
@@ -17,10 +18,12 @@ export class Postagem {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Column({ length: 255 })
   @ApiProperty()
   @IsNotEmpty()
   titulo: string;
 
+  @Column({ type: 'text' })
   @ApiProperty()
   @IsNotEmpty()
   texto: string;
