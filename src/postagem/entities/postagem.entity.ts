@@ -26,7 +26,11 @@ export class Postagem {
   texto: string;
 
   @ApiProperty({ type: String, format: 'date-time' })
-  @CreateDateColumn({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP' })
+  @CreateDateColumn({
+    name: 'data',
+    type: 'timestamp',
+    precision: 0,
+  })
   data: Date;
 
   @ApiProperty({ type: () => Usuario })
