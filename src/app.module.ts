@@ -15,16 +15,13 @@ let isProd = process.env.NODE_ENV === 'production';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true }),
-
-    process.env.NODE_ENV === 'production'
-      ? TypeOrmModule.forRootAsync ({
-      useClass: ProdService,
-      })
-      : TypeOrmModule.forRootAsync ({
-      useClass: DevService,
-      }),
-
+    ConfigModule.forRoot(),
+    TypeOrmModule.forRootAsync({
+      useClass: process.env.NODE_ENV === 'production'
+        ? ProdService
+        : DevService,
+      imports: [ConfigModule]
+    }),
     PostagemModule,
     TemaModule,
     UsuarioModule,
