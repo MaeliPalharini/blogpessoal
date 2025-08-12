@@ -19,13 +19,11 @@ async function bootstrap() {
     .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('swagger', app, document);
+  SwaggerModule.setup('/swagger', app, document);
+
+  app.useGlobalPipes(new ValidationPipe());
 
   app.enableCors();
-
-  app.useGlobalPipes(
-    new ValidationPipe(),
-  );
 
   const port = Number(process.env.PORT) || 4000;
   await app.listen(port);
