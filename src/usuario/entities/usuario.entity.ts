@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty } from 'class-validator';
+import { IsEmail, IsEmpty, IsNotEmpty, IsOptional } from 'class-validator';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Postagem } from '../../postagem/entities/postagem.entity';
 import { Length } from 'class-validator';
@@ -8,6 +8,7 @@ import { ApiProperty } from '@nestjs/swagger';
 export class Usuario {
   @PrimaryGeneratedColumn()
   @ApiProperty()
+  @IsEmpty()
   id: number;
 
   @IsNotEmpty()
@@ -27,10 +28,12 @@ export class Usuario {
   @ApiProperty()
   senha: string;
 
+  @IsOptional()
   @Column({ length: 5000 })
   @ApiProperty()
   foto: string;
 
+  @IsOptional()
   @OneToMany(() => Postagem, (postagem) => postagem.usuario, { cascade: true })
   @ApiProperty()
   postagens: Postagem[];
