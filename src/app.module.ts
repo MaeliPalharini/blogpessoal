@@ -7,6 +7,9 @@ import { AuthModule } from './auth/auth.module';
 import { PostagemModule } from './postagem/postagem.module';
 import { TemaModule } from './tema/tema.module';
 import { UsuarioModule } from './usuario/usuario.module';
+import * as process from 'node:process';
+import { ProdService } from './data/services/prod.services';
+import { DevService } from './data/services/dev.service';
 
 let isProd = process.env.NODE_ENV === 'production';
 
@@ -14,19 +17,13 @@ let isProd = process.env.NODE_ENV === 'production';
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
 
-    TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: (config: ConfigService): TypeOrmModuleOptions => ({
-        type: 'postgres',
-        url: config.get<string>('DATABASE_URL'),
-        autoLoadEntities: true,
-        synchronize: config.get('DB_SYNC') === 'true',
-        logging: false,
-        ssl: isProd ? true : false,
-        extra: isProd ? { ssl: { rejectUnauthorized: false } } : undefined,
+    process.env.NODE_ENV === 'production'
+      ? TypeOrmModule.forRootAsync ({
+      useClass: ProdService,
+      })
+      : TypeOrmModule.forRootAsync ({
+      useClass: DevService,
       }),
-    }),
 
     PostagemModule,
     TemaModule,
