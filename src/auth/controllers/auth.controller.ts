@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   HttpCode,
+  HttpStatus,
   Post,
   UseGuards,
 } from '@nestjs/common';
@@ -11,13 +12,13 @@ import { AuthService } from '../services/auth.service';
 import { UsuarioLogin } from '../entities/usuariologin.entity';
 
 @ApiTags('Usuario')
-@Controller('/auth')
+@Controller('/usuarios')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
   @UseGuards(LocalAuthGuard)
   @Post('/logar')
-  @HttpCode(200)
+  @HttpCode(HttpStatus.OK)
   login(@Body() login: UsuarioLogin) {
     return this.authService.login(login);
   }
