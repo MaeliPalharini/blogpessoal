@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, ILike } from 'typeorm'; // ✅ Adicionado ILike
+import { Repository, ILike } from 'typeorm';
 import { Usuario } from '../entities/usuario.entity';
 import { Bcrypt } from '../../auth/bcrypt/bcrypt';
 
@@ -20,13 +20,13 @@ export class UsuarioService {
 
   async findAll(): Promise<Usuario[]> {
     return this.usuarioRepository.find({
-      // relations: { postagens: true },
+      relations: { postagens: true },
       select: {
         id: true,
         nome: true,
         usuario: true,
         foto: true,
-        // postagens: true ,
+        postagens: true ,
       },
     });
   }
