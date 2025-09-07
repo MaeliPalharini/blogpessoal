@@ -37,7 +37,10 @@ export class Postagem {
   data: Date;
 
   @ApiProperty({ type: () => Usuario })
-  @ManyToOne(() => Usuario, (usuario) => usuario.postagens, { onDelete: 'CASCADE' })
+  @ManyToOne(() => Usuario, (usuario) => usuario.postagens, { 
+    onDelete: 'CASCADE',
+    eager: true,  
+  })
   @JoinColumn({ name: 'usuario_id' })
   usuario: Usuario;
 
